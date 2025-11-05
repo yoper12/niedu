@@ -6,7 +6,7 @@
 
 	"permissions": ["storage"],
 	"host_permissions": [
-		"*://dziennik-uczen.vulcan.net.pl/*/LoginEndpoint.aspx",
+		"*://dziennik-logowanie.vulcan.net.pl/*/Account/Logon*",
 		"*://eduvulcan.pl/logowanie",
 		"*://eduvulcan.pl/"
 	],
@@ -44,7 +44,7 @@
 			"js": ["logout.js"],
 			"matches": [
 				"*://eduvulcan.pl/wylogowanie",
-				"*://dziennik-uczen.vulcan.net.pl/*/nie-wiem-jaki-endpoint"
+				"*://dziennik-uczen.vulcan.net.pl/*/Account/Logout"
 			],
 			"run_at": "document_start"
 		}
