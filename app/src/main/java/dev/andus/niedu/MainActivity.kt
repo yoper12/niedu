@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             showSymbolInputDialog()
         } else {
             val loginUrl = when (journalType) {
-                "zwykły" -> "https://dziennik-uczen.vulcan.net.pl/$symbol/LoginEndpoint.aspx"
+                "zwykły" -> "https://dziennik-uczen.vulcan.net.pl/$symbol/App"
                 else -> "https://eduvulcan.pl/logowanie"
             }
             geckoSession.loadUri(loginUrl)
