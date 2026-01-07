@@ -22,7 +22,7 @@ class UpdateChecker(private val context: Context) {
 
     private fun fetchLatestRelease(): ReleaseInfo? {
         return try {
-            val url = URL("https://api.github.com/repos/AndusDEV/niedu/releases/latest")
+            val url = URL("https://api.github.com/repos/yoper12/niedu/releases/latest")
             val connection = url.openConnection()
             connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
 
