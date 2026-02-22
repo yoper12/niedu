@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.Niedu" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimaryContainer">@color/fallback_blue</item>
+        <item name="colorOnPrimaryContainer">@color/fallback_on_blue</item>
 
-    <style name="Theme.Niedu" parent="android:Theme.Material.Light.NoActionBar" />
+        <item name="colorPrimary">@color/fallback_blue</item>
+    </style>
 </resources>

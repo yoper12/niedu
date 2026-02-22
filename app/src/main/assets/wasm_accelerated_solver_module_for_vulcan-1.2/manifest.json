@@ -1,0 +1,61 @@
+{
+    "manifest_version": 3,
+    "name": "WASM Accelerated Solver Module for Vulcan",
+    "version": "1.2",
+    "description": "Znacząco przyspiesza rozwiązywanie captchy Proof-of-Work Vulcana dzięki wykorzystaniu Rust/WASM.",
+    "icons": {
+        "16": "assets/wasm16.png",
+        "32": "assets/wasm32.png",
+        "48": "assets/wasm48.png",
+        "128": "assets/wasm128.png"
+    },
+    "permissions": ["scripting", "storage"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "assets/wasm16.png",
+            "32": "assets/wasm32.png",
+            "48": "assets/wasm48.png",
+            "128": "assets/wasm128.png"
+        }
+    },
+    "host_permissions": [
+        "https://eduvulcan.pl/*",
+        "https://dziennik-logowanie.vulcan.net.pl/*/Account/Logon*"
+    ],
+    "browser_specific_settings": {
+		"gecko": {
+			"id": "wasm@andus.dev",
+			"strict_min_version": "128.0"
+		}
+	},
+    "content_scripts": [
+        {
+            "matches": [
+                "https://eduvulcan.pl/logowanie*",
+                "https://eduvulcan.pl/utworzKonto*",
+                "https://dziennik-logowanie.vulcan.net.pl/*/Account/Logon*"
+            ],
+            "js": ["src/loader.js"],
+            "css": ["src/style.css"],
+            "run_at": "document_end"
+        }
+    ],
+    "background": {
+        "service_worker": "src/background.js",
+        "scripts": ["src/background.js"],
+        "type": "module"
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "pkg/wasm_for_vulcan.js",
+                "pkg/wasm_for_vulcan_bg.wasm"
+            ],
+            "matches": ["https://eduvulcan.pl/*"]
+        }
+    ]
+}

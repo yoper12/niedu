@@ -20,15 +20,6 @@
 
 	"content_scripts": [
 		{
-			"js": ["loading.js"],
-			"matches": [
-				"*://eduvulcan.pl/logowanie",
-				"*://eduvulcan.pl/",
-				"*://dziennik-logowanie.vulcan.net.pl/*/Account/Logon*"
-			],
-			"run_at": "document_start"
-		},
-		{
 			"js": ["prometeusz.js"],
 			"matches": ["*://eduvulcan.pl/logowanie", "*://eduvulcan.pl/"],
 			"run_at": "document_end"
@@ -38,12 +29,12 @@
 			"matches": [
 				"*://dziennik-logowanie.vulcan.net.pl/*/Account/Logon*"
 			],
-			"run_at": "document_end"
+			"run_at": "document_idle"
 		},
 		{
 			"js": ["logout.js"],
 			"matches": [
-				"*://eduvulcan.pl/wylogowanie",
+				"*://dziennik-logowanie.vulcan.net.pl/*/Logout/End",
 				"*://dziennik-uczen.vulcan.net.pl/*/Account/Logout"
 			],
 			"run_at": "document_start"

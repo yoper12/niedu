@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WASM Vulcan Settings</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                width: 250px;
+                padding: 15px;
+                background-color: #18181b;
+                color: #ccc;
+            }
+
+            h2 {
+                font-size: 16px;
+                margin-top: 0;
+                margin-bottom: 15px;
+                color: #ccd;
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 5px;
+            }
+
+            .setting-row {
+                display: flex;
+                align-items: center;
+                margin-bottom: 12px;
+                justify-content: space-between;
+            }
+
+            .setting-label {
+                font-size: 13px;
+                flex: 1;
+            }
+
+            /* Toggle */
+            /* https://uiverse.io/ClawHack1/itchy-bobcat-18 */
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 40px;
+                height: 24px;
+            }
+
+            .switch .slider {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 40px;
+                height: 24px;
+                background-color: #52525b;
+                border-radius: 34px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .switch .slider::before {
+                content: "";
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                top: 2px;
+                left: 2px;
+                background-color: #fff;
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s;
+            }
+
+            .switch input:checked + .slider::before {
+                transform: translateX(16px);
+            }
+
+            .switch input:checked + .slider {
+                background-color: #007bff;
+            }
+
+            .switch input:checked + .slider::before {
+                transform: translateX(16px);
+            }
+
+            .switch input {
+                display: none;
+            }
+
+            .footer {
+                margin-top: 20px;
+                font-size: 10px;
+                color: #7f8c8d;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>Ustawienia WASM for Vulcan</h2>
+
+        <div class="setting-row">
+            <span class="setting-label">Włącz rozszerzenie</span>
+            <label class="switch">
+                <input type="checkbox" id="extensionEnabled">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-row">
+            <span class="setting-label">Uruchamiaj tylko, gdy captcha jest wymagana</span>
+            <label class="switch">
+                <input type="checkbox" id="onlyIfNeeded">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="footer">Zmiany wymagają odświeżenia strony.</div>
+
+        <script src="popup.js"></script>
+    </body>
+
+</html>

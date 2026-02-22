@@ -6,7 +6,7 @@ function fillLoginForm() {
 	const loginButton = document.getElementById('btLogOn');
 	const triedLoggingIn = sessionStorage.getItem('triedLoggingIn');
 
-	browser.storage.local.get().then((result) => {
+	chrome.storage.local.get().then((result) => {
 		const login = result?.Login;
 		const haslo = result?.Haslo;
 
@@ -22,10 +22,10 @@ function fillLoginForm() {
 				});
 			}
 			loginField.addEventListener('input', () => {
-				browser.storage.local.set({ "Login": loginField.value });
+				chrome.storage.local.set({ "Login": loginField.value });
 			});
 			hasloField.addEventListener('input', () => {
-				browser.storage.local.set({ "Haslo": hasloField.value });
+				chrome.storage.local.set({ "Haslo": hasloField.value });
 			});
 		}
 	});

@@ -1,11 +1,12 @@
 package dev.andus.niedu
 
 import android.content.Context
-import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import org.json.JSONObject
 import java.net.URL
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class UpdateChecker(private val context: Context) {
 
@@ -15,7 +16,7 @@ class UpdateChecker(private val context: Context) {
         val size: Long
     )
 
-    private fun getCurrentVersion(): String {
+    private fun getCurrentVersion(): String? {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         return packageInfo.versionName
     }
@@ -46,8 +47,11 @@ class UpdateChecker(private val context: Context) {
     }
 
     private fun compareVersions(current: String, latest: String): Boolean {
-        val currentParts = current.split(".").map { it.toIntOrNull() ?: 0 }
-        val latestParts = latest.split(".").map { it.toIntOrNull() ?: 0 }
+        val currentClean = current.substringBefore("-")
+        val latestClean = latest.substringBefore("-")
+
+        val currentParts = currentClean.split(".").map { it.toIntOrNull() ?: 0 }
+        val latestParts = latestClean.split(".").map { it.toIntOrNull() ?: 0 }
 
         val maxLength = maxOf(currentParts.size, latestParts.size)
         val paddedCurrent = currentParts.padEnd(maxLength)
@@ -75,7 +79,7 @@ class UpdateChecker(private val context: Context) {
             val currentVersion = getCurrentVersion()
             val latestRelease = fetchLatestRelease()
 
-            if (latestRelease != null && compareVersions(currentVersion, latestRelease.version)) {
+            if (currentVersion != null && latestRelease != null && compareVersions(currentVersion, latestRelease.version)) {
                 (context as MainActivity).runOnUiThread {
                     showUpdateDialog(currentVersion, latestRelease)
                 }
@@ -83,7 +87,7 @@ class UpdateChecker(private val context: Context) {
         }.start()
     }
 
-    private fun showUpdateDialog(currentVersion: String, releaseInfo: ReleaseInfo) {
+    private fun showUpdateDialog(currentVersion: String?, releaseInfo: ReleaseInfo) {
         val message = """
             Nowa aktualizacja dostępna!
             
@@ -94,7 +98,7 @@ class UpdateChecker(private val context: Context) {
             Czy chciałbyś pobrać plik .apk?
         """.trimIndent()
 
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setTitle("Aktualizacja dostępna")
             .setMessage(message)
             .setPositiveButton("Pobierz") { _, _ ->
@@ -102,7 +106,7 @@ class UpdateChecker(private val context: Context) {
                     .setShowTitle(true)
                     .setUrlBarHidingEnabled(true)
                     .build()
-                intent.launchUrl(context, Uri.parse(releaseInfo.downloadUrl))
+                intent.launchUrl(context, releaseInfo.downloadUrl.toUri())
             }
             .setNegativeButton("Później", null)
             .show()

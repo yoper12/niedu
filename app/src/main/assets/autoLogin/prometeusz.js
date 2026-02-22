@@ -10,7 +10,7 @@ function fillLoginForm() {
 	const loginButton = document.getElementById('btLogOn');
 	const triedLoggingIn = sessionStorage.getItem('triedLoggingIn');
 
-	browser.storage.local.get().then((result) => {
+	chrome.storage.local.get().then((result) => {
 		const alias = result?.Alias;
 		const password = result?.Password;
 
@@ -26,10 +26,10 @@ function fillLoginForm() {
 				});
 			}
 			aliasField.addEventListener('input', () => {
-				browser.storage.local.set({ "Alias": aliasField.value });
+				chrome.storage.local.set({ "Alias": aliasField.value });
 			});
 			passwordField.addEventListener('input', () => {
-				browser.storage.local.set({ "Password": passwordField.value });
+				chrome.storage.local.set({ "Password": passwordField.value });
 			});
 		}
 	});
