@@ -1,32 +1,40 @@
 fillLoginForm();
 
-function fillLoginForm() {
-	const loginField = document.getElementById('Login');
-	const hasloField = document.getElementById('Haslo');
-	const loginButton = document.getElementById('btLogOn');
+async function fillLoginForm() {
+	const result = await chrome.storage.local.get();
+	const login = result?.Login;
+	const haslo = result?.Haslo;
+
 	const triedLoggingIn = sessionStorage.getItem('triedLoggingIn');
+	let lastLoginField = null;
 
-	chrome.storage.local.get().then((result) => {
-		const login = result?.Login;
-		const haslo = result?.Haslo;
-
-		if (login !== undefined && haslo !== undefined && triedLoggingIn === null) {
-			loginField.value = login;
-			hasloField.value = haslo;
-			loginButton.click();
-			sessionStorage.setItem("triedLoggingIn", "1");
-		} else {
-			if (triedLoggingIn === "1") {
-				document.querySelectorAll('.message-error').forEach(e => {
-					e.innerHTML = "Wygląda na to, że niedu ma zapisane błędne dane logowania lub Vulcan wymaga uzupełnienia Captchy. Proszę zalogować się ręcznie.";
-				});
-			}
-			loginField.addEventListener('input', () => {
-				chrome.storage.local.set({ "Login": loginField.value });
-			});
-			hasloField.addEventListener('input', () => {
-				chrome.storage.local.set({ "Haslo": hasloField.value });
+	if (login !== undefined && haslo !== undefined && triedLoggingIn === null) {
+		setInterval(() => {
+			if (lastLoginField === document.getElementById('Login')) return;
+			document.getElementById('Login').value = login;
+			document.getElementById('Haslo').value = haslo;
+			document.getElementById('btLogOn').click();
+			sessionStorage.setItem('triedLoggingIn', '1');
+			lastLoginField = document.getElementById('Login');
+		}, 50);
+	} else {
+		if (triedLoggingIn === '1') {
+			document.querySelectorAll('.message-error').forEach((e) => {
+				e.innerHTML =
+					'Wygląda na to, że niedu ma zapisane błędne dane logowania lub Vulcan wymaga uzupełnienia Captchy. Proszę zalogować się ręcznie.';
 			});
 		}
-	});
+		document.addEventListener(
+			'input',
+			(e) => {
+				const target = e.target;
+				if (target?.id === 'Login') {
+					chrome.storage.local.set({ Login: target.value });
+				} else if (target?.id === 'Haslo') {
+					chrome.storage.local.set({ Haslo: target.value });
+				}
+			},
+			true,
+		);
+	}
 }

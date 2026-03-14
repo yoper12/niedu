@@ -1,0 +1,21 @@
+{
+	"manifest_version": 3,
+	"name": "fab controller",
+	"version": "1.0",
+	"description": "Przesyła do aplikacji aktualny URL, pozwalając na podniesienie FAB-a na planie lekcji",
+	"permissions": ["nativeMessaging", "geckoViewAddons", "nativeMessagingFromContent"],
+	"host_permissions": ["*://*.eduvulcan.pl/*", "*://*.vulcan.net.pl/*"],
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "fab-controller@andus.dev",
+			"strict_min_version": "128.0"
+		}
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*.eduvulcan.pl/*", "*://*.vulcan.net.pl/*"],
+			"js": ["content.js"],
+			"run_at": "document_end"
+		}
+	]
+}

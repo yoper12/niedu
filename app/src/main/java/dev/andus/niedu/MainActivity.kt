@@ -22,6 +22,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.mozilla.geckoview.BuildConfig
+import org.mozilla.geckoview.GeckoRuntimeSettings
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.main_activity)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { _, insets ->
     val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
     val density = resources.displayMetrics.density
 
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     val fab = findViewById<FloatingActionButton>(R.id.changeAccountFab)
     val fabParams = fab.layoutParams as ViewGroup.MarginLayoutParams
-    fabParams.bottomMargin = systemBars.bottom + (86 * density).toInt()
+    fabParams.bottomMargin = systemBars.bottom + (16 * density).toInt()
     fabParams.rightMargin = systemBars.right + (16 * density).toInt()
     fab.layoutParams = fabParams
 
@@ -101,7 +103,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupGeckoView() {
         if (!isRuntimeInitialized) {
-            geckoRuntime = GeckoRuntime.create(this)
+            val runtimeSettings = GeckoRuntimeSettings.Builder()
+                .consoleOutput(BuildConfig.DEBUG)
+                .build()
+            geckoRuntime = GeckoRuntime.create(this, runtimeSettings)
             isRuntimeInitialized = true
         }
         extensionController = geckoRuntime.webExtensionController
@@ -153,6 +158,21 @@ class MainActivity : AppCompatActivity() {
             "resource://android/assets/wasm_accelerated_solver_module_for_vulcan-1.2/",
             "wasm@andus.dev"
         )
+        geckoRuntime.webExtensionController.ensureBuiltIn(
+            "resource://android/assets/fabController/",
+            "fab-controller@andus.dev",
+        ).accept { extension ->
+            runOnUiThread {
+                if (extension == null) {
+                    return@runOnUiThread
+                }
+                geckoSession.webExtensionController.setMessageDelegate(
+                    extension,
+                    FabMessagingDelegate(this@MainActivity),
+                    "dev.andus.niedu.fab"
+                )
+            }
+        }
     }
 
     private fun loadLoginPage() {
@@ -165,6 +185,25 @@ class MainActivity : AppCompatActivity() {
             }
             geckoSession.loadUri(loginUrl)
         }
+    }
+
+    fun updateFabPosition(url: String?) {
+        val fab = findViewById<FloatingActionButton>(R.id.changeAccountFab)
+        val density = resources.displayMetrics.density
+
+        val isTimetable = url?.endsWith("planZajec") == true
+        val isHome = url?.contains("dziennik-logowanie") == true || url?.contains("uczen.") == false
+
+        val targetTranslationY = when {
+            isTimetable -> -114f * density
+            !isHome -> -70f * density
+            else -> 0f
+        }
+
+        fab.animate()
+            .translationY(targetTranslationY)
+            .setDuration(250)
+            .start()
     }
 
     private fun saveSymbol(symbol: String) {
