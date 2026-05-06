@@ -7,7 +7,7 @@ if (window.location.href.includes('logowanie')) {
 async function fillLoginForm() {
 	const result = await chrome.storage.local.get();
 
-	const aliasField = document.getElementById('Alias');
+	const aliasField = document.getElementById('UserName');
 	const passwordField = document.getElementById('Password');
 	const loginButton = document.getElementById('btLogOn');
 	const triedLoggingIn = sessionStorage.getItem('triedLoggingIn');
